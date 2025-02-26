@@ -1752,7 +1752,7 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSource() {
 		var nEvents = 0
 		
-		let source = Variable<Int>(0)
+        let source = BehaviorRelay<Int>(value: 0)
 		var finalValue = -1
 		let observable = Observable
 			.combineLatest(source.asObservable(), source.asObservable(), debounceDependencies: true) { $0 + $1 }
@@ -1762,9 +1762,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		source.value = 1
+        source.accept(1)
 		runRunLoop()
-		source.value = 2
+        source.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1775,7 +1775,7 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSourceIndirect() {
 		var nEvents = 0
 		
-		let source = Variable<Int>(0)
+        let source = BehaviorRelay<Int>(value: 0)
 		var finalValue = -1
 		let observable = Observable
 			.combineLatest(source.asObservable().map { $0 }, source.asObservable().map { $0 + 1 },
@@ -1786,9 +1786,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		source.value = 1
+		source.accept(1)
 		runRunLoop()
-		source.value = 2
+		source.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1800,8 +1800,8 @@ extension ObservableCombineLatestTest {
 		
 		let disposeBag = DisposeBag()
 		
-		let a = Variable<Int>(0)
-		let b = Variable<Int>(0)
+        let a = BehaviorRelay<Int>(value: 0)
+        let b = BehaviorRelay<Int>(value: 0)
 		let aObs = a.asObservable()
 		aObs
 			.bind(to: b)
@@ -1815,9 +1815,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		a.value = 1
+        a.accept(1)
 		runRunLoop()
-		a.value = 2
+		a.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1827,8 +1827,8 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSourceViaVariableAndMap() {
 		var nEvents = 0
 		
-		let a = Variable<Int>(0)
-		let b = Variable<Int>(0)
+        let a = BehaviorRelay<Int>(value: 0)
+        let b = BehaviorRelay<Int>(value: 0)
 		let aObs = a.asObservable()
 		_ = aObs
 			.map { 2 * $0 }
@@ -1842,9 +1842,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		a.value = 1
+        a.accept(1)
 		runRunLoop()
-		a.value = 2
+		a.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1854,8 +1854,8 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSourceViaVariableAndDoubleMap() {
 		var nEvents = 0
 		
-		let a = Variable<Int>(0)
-		let b = Variable<Int>(0)
+        let a = BehaviorRelay<Int>(value: 0)
+		let b = BehaviorRelay<Int>(value: 0)
 		let aObs = a.asObservable()
 		let c = aObs.map { $0 }
 		let d = b.asObservable().map { $0 + 1 }
@@ -1870,9 +1870,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		a.value = 1
+		a.accept(1)
 		runRunLoop()
-		a.value = 2
+		a.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1882,8 +1882,8 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSourceViaVariableAndDoubleMap2() {
 		var nEvents = 0
 		
-		let a = Variable<Int>(0)
-		let b = Variable<Int>(0)
+		let a = BehaviorRelay<Int>(value: 0)
+		let b = BehaviorRelay<Int>(value: 0)
 		let aObs = a.asObservable()
 		_ = aObs
 			.map { 2 * $0 }
@@ -1897,9 +1897,9 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		a.value = 1
+		a.accept(1)
 		runRunLoop()
-		a.value = 2
+		a.accept(2)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 3)
@@ -1909,9 +1909,9 @@ extension ObservableCombineLatestTest {
 	func testCombineLatest_DebounceDependenciesSameSourceVeryIndirect() {
 		var nEvents = 0
 		
-		let a = Variable<Int>(0)
-		let b = Variable<Int>(0)
-		let c = Variable<Int>(0)
+        let a = BehaviorRelay<Int>(value: 0)
+		let b = BehaviorRelay<Int>(value: 0)
+		let c = BehaviorRelay<Int>(value: 0)
 		let aObs = a.asObservable()
 		let bObs = b.asObservable()
 		let cObs = c.asObservable()
@@ -1930,15 +1930,15 @@ extension ObservableCombineLatestTest {
 		})
 		
 		runRunLoop()
-		a.value = 1
+		a.accept(1)
 		runRunLoop()
-		b.value = 2
+		b.accept(2)
 		runRunLoop()
-		c.value = 3
+		c.accept(3)
 		runRunLoop()
-		b.value = 4
+		b.accept(4)
 		runRunLoop()
-		a.value = 5
+		a.accept(5)
 		runRunLoop()
 		
 		XCTAssertEqual(nEvents, 6)
