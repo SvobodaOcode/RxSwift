@@ -18,7 +18,7 @@ public final class PublishRelay<Element>: ObservableType {
 		get { return self.subject.source }
 		set { self.subject.source = newValue }
 	}
-	
+
     // Accepts `event` and emits it to subscribers
     public func accept(_ event: Element) {
         self.subject.onNext(event)
